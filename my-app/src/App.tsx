@@ -1,11 +1,12 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SignIn from "./components/forms/LoginForm";
+import SignUp from "./components/forms/SignUpForm";
 
 const App = () => (
   <Router>
     <Routes>
       <Route path="/" element={<SignIn />} />
-      <Route path="/signup" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
     </Routes>
   </Router>
 );

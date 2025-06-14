@@ -5,7 +5,7 @@ import { fireAuth } from "./firebase";
 export const loginWithEmail = (email: string, password: string) =>
   signInWithEmailAndPassword(fireAuth, email, password);
 
-export const registerWithEmail = (email: string, password: string) =>
+export const signUpWithEmail = (email: string, password: string) =>
   createUserWithEmailAndPassword(fireAuth, email, password);
 
 export const logout = () => signOut(fireAuth);
