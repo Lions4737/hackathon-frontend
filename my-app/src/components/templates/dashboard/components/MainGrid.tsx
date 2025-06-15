@@ -12,6 +12,7 @@ import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard, { StatCardProps } from './StatCard';
 import TweetCard from './TweetCard';
+import FloatingPostButton from './FloadtingPostButton';
 
 const data: StatCardProps[] = [
   {
@@ -143,6 +144,7 @@ export default function MainGrid() {
               />
             </Grid>
           </Grid>
+          <FloatingPostButton />
         </Box>
         {/* 右カラム */}
         <Box sx={{ width: '30%', height: '100%', overflowY: 'auto' }}>
