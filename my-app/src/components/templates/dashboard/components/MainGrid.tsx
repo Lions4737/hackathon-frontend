@@ -11,6 +11,7 @@ import HighlightedCard from './HighlightedCard';
 import PageViewsBarChart from './PageViewsBarChart';
 import SessionsChart from './SessionsChart';
 import StatCard, { StatCardProps } from './StatCard';
+import TweetCard from './TweetCard';
 
 const data: StatCardProps[] = [
   {
@@ -48,20 +49,103 @@ const data: StatCardProps[] = [
 export default function MainGrid() {
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-      <Box sx={{ display: 'flex', gap: 4, mt: 4, justifyContent: 'center' }}>
+      <Box sx={{ display: 'flex', gap: 4, mt: 4, justifyContent: 'center', pr: 1, height: '100vh', overflow: 'hidden'}}>
         {/* 左カラム */}
-        <Box sx={{ width: '65%' }}>
+        <Box sx={{ width: '65%', height: '100%', overflowY: 'auto' }}>
           <Typography component="h2" variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Tweet List
           </Typography>
           <Grid container spacing={2}>
             <Grid>
-              <CustomizedDataGrid />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
+              <TweetCard
+                username="John Doe"
+                handle="johndoe"
+                avatarUrl="https://via.placeholder.com/48"
+                content="This is a sample tweet content. It can be quite long and should wrap properly."
+                timestamp="2h ago"
+              />
             </Grid>
           </Grid>
         </Box>
         {/* 右カラム */}
-        <Box sx={{ width: '30%' }}>
+        <Box sx={{ width: '30%', height: '100%', overflowY: 'auto' }}>
           <Typography component="h2" variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Tweet Detail
           </Typography>
