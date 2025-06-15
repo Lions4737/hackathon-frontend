@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 export type TweetCardProps = {
   username: string;
@@ -50,14 +51,31 @@ const TweetCard: React.FC<TweetCardProps> = ({
           <Typography variant="body1" sx={{ mt: 1, whiteSpace: 'pre-line' }}>
             {content}
           </Typography>
-          <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
-            <IconButton size="small">
-              <FavoriteBorderIcon fontSize="small" />
-            </IconButton>
-            <IconButton size="small">
-              <RepeatIcon fontSize="small" />
-            </IconButton>
-          </Stack>
+         <Stack direction="row" spacing={3} sx={{ mt: 1 }}>
+            {/* リプライ */}
+            <Stack direction="row" spacing={0.5} alignItems="center">
+                <IconButton size="small">
+                <ChatBubbleOutlineIcon fontSize="small" color="action" />
+                </IconButton>
+                <Typography variant="caption" color="text.secondary">12</Typography>
+            </Stack>
+
+            {/* リツイート */}
+            <Stack direction="row" spacing={0.5} alignItems="center">
+                <IconButton size="small">
+                <RepeatIcon fontSize="small" color="action" />
+                </IconButton>
+                <Typography variant="caption" color="text.secondary">8</Typography>
+            </Stack>
+
+            {/* いいね */}
+            <Stack direction="row" spacing={0.5} alignItems="center">
+                <IconButton size="small">
+                <FavoriteBorderIcon fontSize="small" color="action" />
+                </IconButton>
+                <Typography variant="caption" color="text.secondary">32</Typography>
+            </Stack>
+        </Stack>
         </Box>
       </CardContent>
     </Card>
