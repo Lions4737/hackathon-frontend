@@ -19,6 +19,7 @@ import ColorModeSelect from '../ui/ColorModeSelect';
 import { GoogleIcon, FacebookIcon } from '../ui/CustomIcons';
 // SignIn.tsx 抜粋
 import { loginWithEmail } from '../../utils/firebaseAuth';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -72,6 +73,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -94,7 +96,16 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         const userCredential = await loginWithEmail(email, password);
         const idToken = await userCredential.user.getIdToken();
         console.log("ログイン成功:", userCredential.user);
-        // ここでリダイレクト処理など
+        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/sessionLogin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ idToken }).toString(),
+        credentials: "include", // cookie を HttpOnly で受け取る
+      });
+
+      if (!res.ok) throw new Error("サーバー側のログインに失敗しました");
+
+      navigate('/home');
     } catch (err: any) {
         console.error("ログイン失敗:", err.message);
         setPasswordError(true);
