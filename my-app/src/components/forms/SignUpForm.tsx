@@ -64,25 +64,41 @@ export default function SignUp() {
     return isValid;
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!validateInputs()) return;
+const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  if (!validateInputs()) return;
 
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email') as string;
-    const password = data.get('password') as string;
+  const data = new FormData(event.currentTarget);
+  const email = data.get('email') as string;
+  const password = data.get('password') as string;
 
-    try {
-      const userCredential = await signUpWithEmail(email, password);
-      console.log("サインアップ成功:", userCredential.user);
+  try {
+    const userCredential = await signUpWithEmail(email, password);
+    const idToken = await userCredential.user.getIdToken();
+
+    // 🔽 サーバーにIDトークンを送ってDBに登録
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/registerUser`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
+
+    if (res.ok) {
+      console.log("ユーザー登録成功");
       setSuccessMessage("アカウントが作成されました。");
-      // 例: navigate("/welcome") またはログイン後のリダイレクト
-    } catch (err: any) {
-      console.error("サインアップ失敗:", err.message);
+    } else {
+      console.error("ユーザー登録失敗");
       setPasswordError(true);
-      setPasswordErrorMessage("登録に失敗しました。メールアドレスをご確認ください。");
+      setPasswordErrorMessage("サーバー側のユーザー登録に失敗しました");
     }
-  };
+
+  } catch (err: any) {
+    console.error("サインアップ失敗:", err.message);
+    setPasswordError(true);
+    setPasswordErrorMessage("登録に失敗しました。メールアドレスをご確認ください。");
+  }
+};
+
 
   return (
     <AppTheme>
