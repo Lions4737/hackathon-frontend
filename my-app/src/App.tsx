@@ -1,19 +1,25 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignIn from "./components/forms/LoginForm";
 import SignUp from "./components/forms/SignUpForm";
-import Dashboard from "./components/templates/dashboard/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
+import DashboardRouter from "./components/layout/DashboardRouter";
 
 const App = () => (
   <Router>
     <Routes>
+      {/* 認証不要 */}
       <Route path="/" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/home" element={
-        <PrivateRoute>
-          <Dashboard />
-        </PrivateRoute>
-        } />
+
+      {/* 認証が必要なすべてのページはここで包む */}
+      <Route
+        path="*"
+        element={
+          <PrivateRoute>
+            <DashboardRouter />
+          </PrivateRoute>
+        }
+      />
     </Routes>
   </Router>
 );
