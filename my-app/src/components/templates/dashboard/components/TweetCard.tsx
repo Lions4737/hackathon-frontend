@@ -20,6 +20,8 @@ export type TweetCardProps = {
   avatarUrl?: string;
   content: string;
   timestamp: string;
+  likeCount: number;
+  replyCount: number;
 };
 
 const TweetCard: React.FC<TweetCardProps> = ({
@@ -27,7 +29,9 @@ const TweetCard: React.FC<TweetCardProps> = ({
   handle,
   avatarUrl,
   content,
-  timestamp
+  timestamp,
+  likeCount,
+  replyCount
 }) => {
   return (
     <Card variant="outlined" sx={{ mb: 2, borderRadius: 2 }}>
@@ -57,7 +61,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
                 <IconButton size="small">
                 <ChatBubbleOutlineIcon fontSize="small" color="action" />
                 </IconButton>
-                <Typography variant="caption" color="text.secondary">12</Typography>
+                <Typography variant="caption" color="text.secondary">{replyCount}</Typography>
             </Stack>
 
             {/* リツイート */}
@@ -65,7 +69,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
                 <IconButton size="small">
                 <RepeatIcon fontSize="small" color="action" />
                 </IconButton>
-                <Typography variant="caption" color="text.secondary">8</Typography>
+                <Typography variant="caption" color="text.secondary">0</Typography>
             </Stack>
 
             {/* いいね */}
@@ -73,7 +77,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
                 <IconButton size="small">
                 <FavoriteBorderIcon fontSize="small" color="action" />
                 </IconButton>
-                <Typography variant="caption" color="text.secondary">32</Typography>
+                <Typography variant="caption" color="text.secondary">{likeCount}</Typography>
             </Stack>
         </Stack>
         </Box>

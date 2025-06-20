@@ -27,6 +27,8 @@ type Post = {
   id: number;
   content: string;
   created_at: string;
+  like_count: number;
+  reply_count: number;
   user: {
     username: string;
     profile_image: string;
@@ -70,6 +72,8 @@ export default function MainGrid() {
                   avatarUrl={post.user.profile_image}
                   content={post.content}
                   timestamp={formatTime(post.created_at)}
+                  likeCount={post.like_count}
+                  replyCount={post.reply_count}
                 />
               </Grid>
             ))}
