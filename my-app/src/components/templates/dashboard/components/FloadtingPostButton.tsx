@@ -41,11 +41,31 @@ const FloatingPostButton: React.FC = () => {
     setOpen(false);
   };
 
-  const onSubmit = (data: TweetFormData) => {
-    console.log('投稿内容:', data.content);
-    // TODO: 投稿処理
+  const onSubmit = async (data: TweetFormData) => {
+    console.log("onSubmit 発火", data);
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/posts`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content: data.content }),
+    });
+
+    if (!res.ok) {
+      throw new Error('投稿に失敗しました');
+    }
+
+    const result = await res.json();
+    console.log('投稿成功:', result);
     handleClose();
-  };
+  } catch (err) {
+    console.error('投稿エラー:', err);
+    alert('投稿に失敗しました');
+  }
+};
+
 
   return (
     <>
