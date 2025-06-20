@@ -10,6 +10,8 @@ import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import MenuButton from './MenuButton';
+import { useAuthContext } from '../../../auth/AuthContext'; // 🔁 追加
+import { useNavigate } from 'react-router-dom'; // 🔁 追加
 
 const MenuItem = styled(MuiMenuItem)({
   margin: '2px 0',
@@ -18,12 +20,23 @@ const MenuItem = styled(MuiMenuItem)({
 export default function OptionsMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { logout } = useAuthContext(); // ✅ AuthContextからlogout取得
+  const navigate = useNavigate(); // ✅ リダイレクト用
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = async () => {
+    handleClose();
+    await logout(); // ✅ セッション終了
+    navigate('/');  // ✅ ホームへリダイレクト
+  };
+
   return (
     <React.Fragment>
       <MenuButton
@@ -60,7 +73,7 @@ export default function OptionsMenu() {
         <MenuItem onClick={handleClose}>Settings</MenuItem>
         <Divider />
         <MenuItem
-          onClick={handleClose}
+          onClick={handleLogout} // ✅ logoutに変更
           sx={{
             [`& .${listItemIconClasses.root}`]: {
               ml: 'auto',
