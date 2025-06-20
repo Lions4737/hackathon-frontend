@@ -4,17 +4,38 @@ type AuthContextType = {
   currentUser: string | null;
   loading: boolean;
   logout: () => Promise<void>;
+  refreshSession: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
   currentUser: null,
   loading: true,
   logout: async () => {}, // 型エラー防止のダミー
+  refreshSession: async () => {},
 });
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const checkSession = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/checkSession`, {
+        credentials: 'include',
+      });
+
+      const text = await res.text();
+      const data = JSON.parse(text);
+
+      setCurrentUser(data?.uid || null);
+    } catch (err) {
+      console.error("❌ checkSession error:", err);
+      setCurrentUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
   const check = async () => {
@@ -56,7 +77,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, logout }}>
+    <AuthContext.Provider value={{ currentUser, loading, logout, refreshSession: checkSession }}>
       {children}
     </AuthContext.Provider>
   );
