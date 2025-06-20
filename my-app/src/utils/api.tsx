@@ -48,3 +48,33 @@ export const unlikePost = async (postId: number): Promise<void> => {
   });
   if (!res.ok) throw new Error('Failed to unlike post');
 };
+
+export async function fetchPostById(postId: number) {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/posts/${postId}`, {
+      credentials: 'include', // 認証が必要なら
+    });
+    if (!res.ok) {
+      throw new Error("投稿取得に失敗しました");
+    }
+    return await res.json(); // 親ツイート1件のオブジェクト
+  } catch (err) {
+    console.error("fetchPostById エラー", err);
+    throw err;
+  }
+}
+
+export async function fetchRepliesByPostId(postId: number) {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/posts/${postId}/replies`, {
+      credentials: 'include',
+    });
+    if (!res.ok) {
+      throw new Error("リプライ取得に失敗しました");
+    }
+    return await res.json(); // リプライ配列
+  } catch (err) {
+    console.error("fetchRepliesByPostId エラー", err);
+    throw err;
+  }
+}
