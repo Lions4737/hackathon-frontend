@@ -13,6 +13,7 @@ import {
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import { useNavigate } from 'react-router-dom'; // ✅ 追加
 
 export type TweetCardProps = {
   id: number;
@@ -39,11 +40,22 @@ const TweetCard: React.FC<TweetCardProps> = ({
   isLiked,
   onToggleLike
 }) => {
-  const handleLike = () => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/posts/${id}`);
+  };
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation(); // ✅ カードクリックと分離
     onToggleLike(id, isLiked);
   };
   return (
-    <Card variant="outlined" sx={{ mb: 2, borderRadius: 2 }}>
+    <Card
+      variant="outlined"
+      sx={{ mb: 2, borderRadius: 2, cursor: 'pointer' }}
+      onClick={handleCardClick} // ✅ カードクリック時に詳細へ遷移
+    >
       <CardContent sx={{ display: 'flex', flexDirection: 'row' }}>
         <Avatar
           alt={username}
@@ -64,34 +76,34 @@ const TweetCard: React.FC<TweetCardProps> = ({
           <Typography variant="body1" sx={{ mt: 1, whiteSpace: 'pre-line' }}>
             {content}
           </Typography>
-         <Stack direction="row" spacing={3} sx={{ mt: 1 }}>
+          <Stack direction="row" spacing={3} sx={{ mt: 1 }}>
             {/* リプライ */}
             <Stack direction="row" spacing={0.5} alignItems="center">
-                <IconButton size="small">
+              <IconButton size="small" onClick={(e) => e.stopPropagation()}>
                 <ChatBubbleOutlineIcon fontSize="small" color="action" />
-                </IconButton>
-                <Typography variant="caption" color="text.secondary">{replyCount}</Typography>
+              </IconButton>
+              <Typography variant="caption" color="text.secondary">{replyCount}</Typography>
             </Stack>
 
             {/* リツイート */}
             <Stack direction="row" spacing={0.5} alignItems="center">
-                <IconButton size="small">
+              <IconButton size="small" onClick={(e) => e.stopPropagation()}>
                 <RepeatIcon fontSize="small" color="action" />
-                </IconButton>
-                <Typography variant="caption" color="text.secondary">0</Typography>
+              </IconButton>
+              <Typography variant="caption" color="text.secondary">0</Typography>
             </Stack>
 
             {/* いいね */}
             <Stack direction="row" spacing={0.5} alignItems="center">
-            <IconButton size="small" onClick={handleLike}>
-              <FavoriteBorderIcon
-                fontSize="small"
-                color={isLiked ? 'error' : 'action'}
-              />
-            </IconButton>
-            <Typography variant="caption" color="text.secondary">{likeCount}</Typography>
+              <IconButton size="small" onClick={handleLike}>
+                <FavoriteBorderIcon
+                  fontSize="small"
+                  color={isLiked ? 'error' : 'action'}
+                />
+              </IconButton>
+              <Typography variant="caption" color="text.secondary">{likeCount}</Typography>
+            </Stack>
           </Stack>
-        </Stack>
         </Box>
       </CardContent>
     </Card>
