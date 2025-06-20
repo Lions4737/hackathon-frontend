@@ -15,6 +15,7 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 export type TweetCardProps = {
+  id: number;
   username: string;
   handle: string;
   avatarUrl?: string;
@@ -22,17 +23,25 @@ export type TweetCardProps = {
   timestamp: string;
   likeCount: number;
   replyCount: number;
+  isLiked: boolean;
+  onToggleLike: (postId: number, liked: boolean) => void;
 };
 
 const TweetCard: React.FC<TweetCardProps> = ({
+  id,
   username,
   handle,
   avatarUrl,
   content,
   timestamp,
   likeCount,
-  replyCount
+  replyCount,
+  isLiked,
+  onToggleLike
 }) => {
+  const handleLike = () => {
+    onToggleLike(id, isLiked);
+  };
   return (
     <Card variant="outlined" sx={{ mb: 2, borderRadius: 2 }}>
       <CardContent sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -74,11 +83,14 @@ const TweetCard: React.FC<TweetCardProps> = ({
 
             {/* いいね */}
             <Stack direction="row" spacing={0.5} alignItems="center">
-                <IconButton size="small">
-                <FavoriteBorderIcon fontSize="small" color="action" />
-                </IconButton>
-                <Typography variant="caption" color="text.secondary">{likeCount}</Typography>
-            </Stack>
+            <IconButton size="small" onClick={handleLike}>
+              <FavoriteBorderIcon
+                fontSize="small"
+                color={isLiked ? 'error' : 'action'}
+              />
+            </IconButton>
+            <Typography variant="caption" color="text.secondary">{likeCount}</Typography>
+          </Stack>
         </Stack>
         </Box>
       </CardContent>
