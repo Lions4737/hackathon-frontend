@@ -20,6 +20,7 @@ import { GoogleIcon, FacebookIcon } from '../ui/CustomIcons';
 // SignIn.tsx 抜粋
 import { loginWithEmail } from '../../utils/firebaseAuth';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../auth/AuthContext'; 
 
 
 
@@ -74,6 +75,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  const { refreshSession } = useAuthContext();
   
   const handleClickOpen = () => {
     setOpen(true);
@@ -104,7 +106,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       });
 
       if (!res.ok) throw new Error("サーバー側のログインに失敗しました");
-
+      
+      await refreshSession();
       navigate('/home');
     } catch (err: any) {
         console.error("ログイン失敗:", err.message);

@@ -11,12 +11,26 @@ import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 
+import { useAuthContext } from '../../../auth/AuthContext'; // ✅ 追加
+
 interface SideMenuMobileProps {
   open: boolean | undefined;
   toggleDrawer: (newOpen: boolean) => () => void;
 }
 
 export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobileProps) {
+  const { logout } = useAuthContext(); // ✅ AuthContext から logout を取得
+
+  const handleLogout = async () => {
+    console.log('Logout button clicked'); // ✅ ログアウトボタンのクリックを確認するためのログ
+    try {
+      await logout();
+      window.location.href = '/'; // ✅ ログアウト後の遷移（任意で useNavigate にも変更可能）
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -30,17 +44,9 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
         },
       }}
     >
-      <Stack
-        sx={{
-          maxWidth: '70dvw',
-          height: '100%',
-        }}
-      >
+      <Stack sx={{ maxWidth: '70dvw', height: '100%' }}>
         <Stack direction="row" sx={{ p: 2, pb: 0, gap: 1 }}>
-          <Stack
-            direction="row"
-            sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}
-          >
+          <Stack direction="row" sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}>
             <Avatar
               sizes="small"
               alt="Riley Carter"
@@ -62,7 +68,12 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
         </Stack>
         <CardAlert />
         <Stack sx={{ p: 2 }}>
-          <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+          <Button
+            variant="outlined"
+            fullWidth
+            startIcon={<LogoutRoundedIcon />}
+            onClick={handleLogout} // ✅ ログアウト処理をバインド
+          >
             Logout
           </Button>
         </Stack>
