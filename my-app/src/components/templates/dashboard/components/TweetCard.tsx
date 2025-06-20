@@ -44,7 +44,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
                 {username}
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                @{handle} · {timestamp}
+                {handle} · {timestamp}
               </Typography>
             </Box>
           </Stack>

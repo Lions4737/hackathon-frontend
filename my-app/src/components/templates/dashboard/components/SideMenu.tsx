@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
@@ -8,7 +9,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
-import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
 
 const drawerWidth = 240;
@@ -24,7 +24,34 @@ const Drawer = styled(MuiDrawer)({
   },
 });
 
+type DBUser = {
+  id: number;
+  firebase_uid: string;
+  username: string;
+  description?: string;
+  profile_image?: string;
+};
+
 export default function SideMenu() {
+  const [dbUser, setDbUser] = useState<DBUser | null>(null);
+
+  useEffect(() => {
+    const fetchDBUser = async () => {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/me`, {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error('Failed to fetch DB user');
+        const data = await res.json();
+        setDbUser(data);
+      } catch (err) {
+        console.error('❌ SideMenu user fetch failed:', err);
+      }
+    };
+
+    fetchDBUser();
+  }, []);
+
   return (
     <Drawer
       variant="permanent"
@@ -35,27 +62,19 @@ export default function SideMenu() {
         },
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          mt: 'calc(var(--template-frame-height, 0px) + 4px)',
-          p: 1.5,
-        }}
-      >
+      {/* 上部セレクタ */}
+      <Box sx={{ display: 'flex', mt: 'calc(var(--template-frame-height, 0px) + 4px)', p: 1.5 }}>
         <SelectContent />
       </Box>
+
       <Divider />
-      <Box
-        sx={{
-          overflow: 'auto',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+
+      {/* メニューコンテンツ */}
+      <Box sx={{ overflow: 'auto', height: '100%', display: 'flex', flexDirection: 'column' }}>
         <MenuContent />
-        <CardAlert />
       </Box>
+
+      {/* ログインユーザー情報（直接APIから取得） */}
       <Stack
         direction="row"
         sx={{
@@ -68,16 +87,16 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
+          alt={dbUser?.username || 'User'}
+          src={dbUser?.profile_image ? `/images/${dbUser.profile_image}` : '/default-avatar.png'}
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
+            {dbUser?.username || 'Anonymous'}
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
+            ID: {dbUser?.id || 'no-uid'}
           </Typography>
         </Box>
         <OptionsMenu />
