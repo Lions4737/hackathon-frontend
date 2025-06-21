@@ -18,6 +18,7 @@ import GavelIcon from '@mui/icons-material/Gavel'; // ← 分析アイコン
 
 export type TweetCardProps = {
   id: number;
+  userId: number; // ユーザーIDを追加
   username: string;
   handle: string;
   avatarUrl?: string;
@@ -31,6 +32,7 @@ export type TweetCardProps = {
 
 const TweetCard: React.FC<TweetCardProps> = ({
   id,
+  userId,
   username,
   handle,
   avatarUrl,
@@ -74,12 +76,12 @@ const TweetCard: React.FC<TweetCardProps> = ({
               <Typography variant="subtitle1" fontWeight="bold">
                 {username}
               </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {handle} · {timestamp}
+              <Typography variant="caption" color="text.secondary" >
+                @{userId} · {timestamp}
               </Typography>
             </Box>
           </Stack>
-          <Typography variant="body1" sx={{ mt: 1, whiteSpace: 'pre-line' }}>
+          <Typography variant="body1" sx={{ my: 2, whiteSpace: 'pre-line', fontSize: '1.1rem' }}>
             {content}
           </Typography>
             {/* 全アクションを1つのStackで横並びに */}

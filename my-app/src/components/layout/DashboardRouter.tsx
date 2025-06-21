@@ -4,7 +4,7 @@ import Dashboard from "../templates/dashboard/Dashboard";
 import HomePage from "../../pages/HomePage";
 import PostPage from "../../pages/PostPage";
 import ProfilePage from "../../pages/ProfilePage";
-import MyPostsPage from "../../pages/MyPostPage";
+import MyPostsPage from "../../pages/UserPostsPage";
 
 const DashboardRouter = () => {
   const location = useLocation();

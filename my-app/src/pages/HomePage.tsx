@@ -17,6 +17,7 @@ function formatTime(isoString: string): string {
 
 type Post = {
   id: number;
+  user_id: number;
   content: string;
   created_at: string;
   like_count: number;
@@ -73,11 +74,12 @@ const HomePage = () => {
           <Typography component="h2" variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Tweet List
           </Typography>
-          <Grid container spacing={2}>
+          <Grid container spacing={0}>
             {posts.map((post) => (
               <Grid item xs={12} key={post.id} sx={{width: '100%'}}>
                 <TweetCard
                   id={post.id}
+                  userId={post.user_id}
                   username={post.user.username}
                   handle={`@${post.user.username}`}
                   avatarUrl={post.user.profile_image}
