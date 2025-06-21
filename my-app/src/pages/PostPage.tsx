@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { Box, Grid, Typography } from '@mui/material';
 import TweetCard from '../components/templates/dashboard/components/TweetCard';
 import FloatingPostButton from '../components/templates/dashboard/components/FloadtingPostButton';
-import { fetchPostById, fetchRepliesByPostId, likePost, unlikePost, fetchMyLikes } from '../utils/api';
+import {
+  fetchPostById,
+  fetchRepliesByPostId,
+  likePost,
+  unlikePost,
+  fetchMyLikes,
+} from '../utils/api';
 import { formatDistanceToNow } from 'date-fns';
 
 function formatTime(isoString: string): string {
@@ -24,26 +30,38 @@ type Post = {
 
 const PostPage = () => {
   const { postId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const query = new URLSearchParams(location.search);
+  const replyOpen = query.get('replyOpen') === 'true';
+
   const [post, setPost] = useState<Post | null>(null);
   const [replies, setReplies] = useState<Post[]>([]);
   const [likedPostIds, setLikedPostIds] = useState<number[]>([]);
+  const [openReplyModal, setOpenReplyModal] = useState(replyOpen);
+
+  // ✅ 再取得関数を useCallback で定義
+  const load = useCallback(async () => {
+    if (!postId) return;
+    const [parent, replyList, myLikes] = await Promise.all([
+      fetchPostById(Number(postId)),
+      fetchRepliesByPostId(Number(postId)),
+      fetchMyLikes(),
+    ]);
+    setPost(parent);
+    setReplies(replyList);
+    setLikedPostIds(myLikes);
+  }, [postId]);
 
   useEffect(() => {
-    const load = async () => {
-      if (!postId) return;
-
-      const [parent, replyList, myLikes] = await Promise.all([
-        fetchPostById(Number(postId)),
-        fetchRepliesByPostId(Number(postId)),
-        fetchMyLikes(),
-      ]);
-      setPost(parent);
-      setReplies(replyList);
-      setLikedPostIds(myLikes);
-    };
-
     load();
-  }, [postId]);
+  }, [load]);
+
+  useEffect(() => {
+  const query = new URLSearchParams(location.search);
+  const replyOpen = query.get('replyOpen') === 'true';
+  setOpenReplyModal(replyOpen);
+}, [location.search]);
 
   const handleToggleLike = async (tweetId: number, isLiked: boolean) => {
     if (isLiked) {
@@ -69,6 +87,11 @@ const PostPage = () => {
     }
   };
 
+  const handleCloseReplyModal = () => {
+    setOpenReplyModal(false);
+    navigate(`/posts/${postId}`, { replace: true });
+  };
+
   if (!post) return <div>Loading...</div>;
 
   return (
@@ -92,7 +115,7 @@ const PostPage = () => {
 
           {/* 親ツイート */}
           <Grid container spacing={2} sx={{ mb: 2 }}>
-            <Grid item xs={12} key={post.id} sx={{width: '100%'}}>
+            <Grid item xs={12} key={post.id} sx={{ width: '100%' }}>
               <TweetCard
                 id={post.id}
                 username={post.user.username}
@@ -112,7 +135,7 @@ const PostPage = () => {
           <Box sx={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto' }}>
             <Grid container spacing={2}>
               {replies.map((reply) => (
-                <Grid item xs={12} key={reply.id} sx={{width: '100%'}}>
+                <Grid item xs={12} key={reply.id} sx={{ width: '100%' }}>
                   <TweetCard
                     id={reply.id}
                     username={reply.user.username}
@@ -130,15 +153,26 @@ const PostPage = () => {
             </Grid>
           </Box>
 
-          <FloatingPostButton />
+          <FloatingPostButton
+            parentPostId={Number(postId)}
+            open={openReplyModal}
+            onPostSuccess={() => {
+              handleCloseReplyModal(); // モーダルを閉じる
+              load();                  // 状態を再取得する（リロード相当）
+            }}
+            onClose={() => {
+                // 🔥 キャンセル時にもURLの `replyOpen` を削除
+                setOpenReplyModal(false);
+                navigate(`/posts/${postId}`, { replace: true });
+            }}
+          />
         </Box>
 
-        {/* 右カラム（お好みで表示可） */}
+        {/* 右カラム */}
         <Box sx={{ width: '30%', height: '100%', overflowY: 'auto' }}>
           <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Related Info
           </Typography>
-          {/* 右カラムコンテンツ例：Analyticsやその他のTweetなど */}
         </Box>
       </Box>
     </Box>
