@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Dashboard from "../templates/dashboard/Dashboard";
 import HomePage from "../../pages/HomePage";
 import PostPage from "../../pages/PostPage";
+import ProfilePage from "../../pages/ProfilePage";
 
 const DashboardRouter = () => {
   const location = useLocation();
@@ -12,6 +13,7 @@ const DashboardRouter = () => {
       <Routes location={location}>
         <Route path="/home" element={<HomePage />} />
         <Route path="/posts/:postId" element={<PostPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Dashboard>
   );

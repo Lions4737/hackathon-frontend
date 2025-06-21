@@ -86,9 +86,14 @@ export default function SideMenu() {
         }}
       >
         <Avatar
-          sizes="small"
           alt={dbUser?.username || 'User'}
-          src={dbUser?.profile_image ? `/images/${dbUser.profile_image}` : '/default-avatar.png'}
+          src={
+            dbUser?.profile_image
+              ? dbUser.profile_image.startsWith('http')
+                ? dbUser.profile_image
+                : `/images/${dbUser.profile_image}`
+              : '/default-avatar.png'
+          }
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>

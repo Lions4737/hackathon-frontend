@@ -102,4 +102,25 @@ export const fetchFactCheck = async (postId: number) => {
   }
 };
 
+export const fetchUserProfile = async () => {
+  const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/profile`, {
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('プロフィール取得に失敗しました');
+  return await res.json();
+};
+
+export const updateUserProfile = async (profile: {
+  username: string;
+  description: string;
+  profile_image: string;
+}) => {
+  const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/profile`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify(profile),
+  });
+  if (!res.ok) throw new Error('プロフィール更新に失敗しました');
+};
 
