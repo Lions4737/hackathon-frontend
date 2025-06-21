@@ -101,17 +101,39 @@ export default function MyPostsPage() {
             </Stack>
           )}
 
-          <Typography component="h2" variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
-            My Tweets
-          </Typography>
+          <Box sx={{ position: 'relative', mb: 2 }}>
+            <Typography
+                component="h2"
+                variant="h6"
+                sx={{
+                textAlign: 'center',
+                }}
+            >
+                My Tweets
+            </Typography>
+            <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                position: 'absolute',
+                right: 0,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                mr: 2,
+                }}
+            >
+                投稿数: {posts.length} 件
+            </Typography>
+            </Box>
 
-          <Grid container spacing={2}>
+          <Grid container spacing={0}>
             {posts
               .filter((post) => post.content?.trim())
               .map((post) => (
                 <Grid item xs={12} key={post.id} sx={{ width: '100%' }}>
                   <TweetCard
                     id={post.id}
+                    userId={post.user_id}
                     username={post.user?.username || '匿名'}
                     handle={`@${post.user?.username || 'anonymous'}`}
                     avatarUrl={post.user?.profile_image || '/default-avatar.png'}

@@ -128,3 +128,18 @@ export const updateUserProfile = async (profile: {
   if (!res.ok) throw new Error('プロフィール更新に失敗しました');
 };
 
+export const fetchUserPosts = async (userId: number) => {
+  const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/users/${userId}/posts`, {
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('投稿取得に失敗しました');
+  return await res.json();
+};
+
+export const fetchUserProfileById = async (userId: number) => {
+  const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/users/${userId}`, {
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('プロフィール取得に失敗しました');
+  return await res.json();
+};

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom'; // 追加
+import { useNavigate, useLocation } from 'react-router-dom'; // ✅ useLocation 追加
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -18,13 +18,17 @@ const mainListItems = [
 
 export default function MenuContent() {
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ 現在のURL取得
 
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
-        {mainListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton onClick={() => navigate(item.path)} selected={index === 0}>
+        {mainListItems.map((item) => (
+          <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              onClick={() => navigate(item.path)}
+              selected={location.pathname === item.path} // ✅ パス一致で選択
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

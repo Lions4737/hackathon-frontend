@@ -19,6 +19,7 @@ function formatTime(isoString: string): string {
 
 type Post = {
   id: number;
+  user_id: number;
   content: string;
   created_at: string;
   like_count: number;
@@ -127,6 +128,7 @@ const PostPage = () => {
             <Grid item xs={12} key={post.id} sx={{ width: '100%' }}>
               <TweetCard
                 id={post.id}
+                userId={post.user_id}
                 username={post.user.username}
                 handle={`@${post.user.username}`}
                 avatarUrl={post.user.profile_image}
@@ -142,11 +144,12 @@ const PostPage = () => {
 
           {/* リプライ一覧 */}
           <Box sx={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto' }}>
-            <Grid container spacing={2}>
+            <Grid container spacing={0} justifyContent="center">
               {replies.map((reply) => (
-                <Grid item xs={12} key={reply.id} sx={{ width: '100%' }}>
+                <Grid item xs={12} key={reply.id} sx={{ width: '80%' }} > 
                   <TweetCard
                     id={reply.id}
+                    userId={reply.user_id}
                     username={reply.user.username}
                     handle={`@${reply.user.username}`}
                     avatarUrl={reply.user.profile_image}
