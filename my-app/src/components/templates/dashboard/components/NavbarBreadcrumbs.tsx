@@ -43,30 +43,31 @@ export default function NavbarBreadcrumbs() {
 
       {/* /home 以外のときだけパンくずを追加 */}
       {!isOnlyHome &&
-        pathnames.map((value, index) => {
-          const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-          const isLast = index === pathnames.length - 1;
+      pathnames.map((value, index) => {
+        const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+        const isLast = index === pathnames.length - 1;
+        const isNonLinked = value === 'posts' || value === 'users';
 
-          return isLast || value === 'posts' ? (
-            <Typography
-              key={to}
-              variant="body1"
-              sx={{ color: 'text.primary', fontWeight: 600 }}
-            >
-              {decodeURIComponent(value)}
-            </Typography>
-          ) : (
-            <Link
-              key={to}
-              underline="hover"
-              color="inherit"
-              component={RouterLink}
-              to={to}
-            >
-              {decodeURIComponent(value)}
-            </Link>
-          );
-        })}
+        return isLast || isNonLinked ? (
+          <Typography
+            key={to}
+            variant="body1"
+            sx={{ color: 'text.primary', fontWeight: 600 }}
+          >
+            {decodeURIComponent(value)}
+          </Typography>
+        ) : (
+          <Link
+            key={to}
+            underline="hover"
+            color="inherit"
+            component={RouterLink}
+            to={to}
+          >
+            {decodeURIComponent(value)}
+          </Link>
+        );
+      })}
     </StyledBreadcrumbs>
   );
 }

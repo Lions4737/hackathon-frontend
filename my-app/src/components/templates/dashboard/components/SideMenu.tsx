@@ -71,7 +71,7 @@ export default function SideMenu() {
 
       {/* メニューコンテンツ */}
       <Box sx={{ overflow: 'auto', height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <MenuContent />
+        {dbUser && <MenuContent userId={dbUser.id} />}
       </Box>
 
       {/* ログインユーザー情報（直接APIから取得） */}

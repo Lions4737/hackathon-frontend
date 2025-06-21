@@ -4,7 +4,7 @@ import Dashboard from "../templates/dashboard/Dashboard";
 import HomePage from "../../pages/HomePage";
 import PostPage from "../../pages/PostPage";
 import ProfilePage from "../../pages/ProfilePage";
-import MyPostsPage from "../../pages/UserPostsPage";
+import UserPostsPage from "../../pages/UserPostsPage";
 
 const DashboardRouter = () => {
   const location = useLocation();
@@ -15,7 +15,7 @@ const DashboardRouter = () => {
         <Route path="/home" element={<HomePage />} />
         <Route path="/posts/:postId" element={<PostPage />} />
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/my-posts" element={<MyPostsPage />} />
+        <Route path="/users/:userId" element={<UserPostsPage />} />
       </Routes>
     </Dashboard>
   );

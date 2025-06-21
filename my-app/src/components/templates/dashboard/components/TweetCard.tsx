@@ -15,6 +15,8 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useNavigate } from 'react-router-dom'; // ✅ 追加
 import GavelIcon from '@mui/icons-material/Gavel'; // ← 分析アイコン
+import { Link as RouterLink } from 'react-router-dom'; // ← RouterLink をインポート追加
+import Link from '@mui/material/Link';
 
 export type TweetCardProps = {
   id: number;
@@ -72,14 +74,28 @@ const TweetCard: React.FC<TweetCardProps> = ({
         />
         <Box sx={{ flex: 1 }}>
           <Stack direction="row" justifyContent="space-between">
-            <Box>
-              <Typography variant="subtitle1" fontWeight="bold">
+            <Stack direction="column">
+                {/* 上の行: ユーザー名（リンク） */}
+                <Typography
+                component={RouterLink}
+                to={`/users/${userId}`}
+                variant="subtitle1"
+                fontWeight="bold"
+                onClick={(e) => e.stopPropagation()}
+                sx={{
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    '&:hover': { textDecoration: 'underline' },
+                }}
+                >
                 {username}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" >
+                </Typography>
+
+                {/* 下の行: ユーザーIDと投稿時間 */}
+                <Typography variant="caption" color="text.secondary">
                 @{userId} · {timestamp}
-              </Typography>
-            </Box>
+                </Typography>
+            </Stack>
           </Stack>
           <Typography variant="body1" sx={{ my: 2, whiteSpace: 'pre-line', fontSize: '1.1rem' }}>
             {content}

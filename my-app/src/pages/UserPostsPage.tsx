@@ -9,12 +9,13 @@ import {
 } from '@mui/material';
 import TweetCard from '../components/templates/dashboard/components/TweetCard';
 import {
-  fetchMyPosts,
+  fetchUserPosts,
   fetchMyLikes,
-  fetchUserProfile,
+  fetchUserProfileById,
   likePost,
   unlikePost,
 } from '../utils/api';
+import { useParams } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import FloatingPostButton from '../components/templates/dashboard/components/FloadtingPostButton';
 
@@ -22,19 +23,22 @@ function formatTime(isoString: string): string {
   return formatDistanceToNow(new Date(isoString), { addSuffix: true });
 }
 
-export default function MyPostsPage() {
+export default function UserPostsPage() {
+  const { userId } = useParams(); // ← ここでURLからuserId取得
   const [posts, setPosts] = useState<any[]>([]);
   const [likes, setLikes] = useState<number[]>([]);
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!userId) return;
+
     const loadData = async () => {
       try {
         const [posts, likes, profile] = await Promise.all([
-          fetchMyPosts(),
+          fetchUserPosts(Number(userId)),
           fetchMyLikes(),
-          fetchUserProfile(),
+          fetchUserProfileById(Number(userId)),
         ]);
         setPosts(posts);
         setLikes(likes);
@@ -46,7 +50,7 @@ export default function MyPostsPage() {
       }
     };
     loadData();
-  }, []);
+  }, [userId]);
 
   const handleToggleLike = async (postId: number, isLiked: boolean) => {
     try {
@@ -83,7 +87,7 @@ export default function MyPostsPage() {
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       <Box sx={{ display: 'flex', gap: 4, mt: 4, justifyContent: 'center', pr: 1, height: '100vh', overflow: 'hidden' }}>
-        {/* 左カラム（Tweetリスト） */}
+        {/* 左カラム */}
         <Box sx={{ width: '65%', height: '100%', overflowY: 'auto' }}>
           {profile && (
             <Stack direction="row" alignItems="center" spacing={2} mb={3}>
@@ -102,29 +106,23 @@ export default function MyPostsPage() {
           )}
 
           <Box sx={{ position: 'relative', mb: 2 }}>
-            <Typography
-                component="h2"
-                variant="h6"
-                sx={{
-                textAlign: 'center',
-                }}
-            >
-                My Tweets
+            <Typography component="h2" variant="h6" sx={{ textAlign: 'center' }}>
+              Tweets
             </Typography>
             <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{
+              variant="body2"
+              color="text.secondary"
+              sx={{
                 position: 'absolute',
                 right: 0,
                 top: '50%',
                 transform: 'translateY(-50%)',
                 mr: 2,
-                }}
+              }}
             >
-                投稿数: {posts.length} 件
+              投稿数: {posts.length} 件
             </Typography>
-            </Box>
+          </Box>
 
           <Grid container spacing={0}>
             {posts
