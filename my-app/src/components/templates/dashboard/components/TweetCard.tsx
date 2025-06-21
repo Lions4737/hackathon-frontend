@@ -82,46 +82,48 @@ const TweetCard: React.FC<TweetCardProps> = ({
           <Typography variant="body1" sx={{ mt: 1, whiteSpace: 'pre-line' }}>
             {content}
           </Typography>
-          <Stack direction="row" spacing={3} sx={{ mt: 1 }}>
+            {/* 全アクションを1つのStackで横並びに */}
+            <Stack direction="row" spacing={3} sx={{ mt: 1 }}>
             {/* リプライ */}
             <Stack direction="row" spacing={0.5} alignItems="center">
-              <IconButton size="small" onClick={handleReplyClick}>
+                <IconButton size="small" onClick={handleReplyClick}>
                 <ChatBubbleOutlineIcon fontSize="small" color="action" />
-              </IconButton>
-              <Typography variant="caption" color="text.secondary">{replyCount}</Typography>
+                </IconButton>
+                <Typography variant="caption" color="text.secondary">{replyCount}</Typography>
             </Stack>
 
             {/* リツイート */}
             <Stack direction="row" spacing={0.5} alignItems="center">
-              <IconButton size="small" onClick={(e) => e.stopPropagation()}>
+                <IconButton size="small" onClick={(e) => e.stopPropagation()}>
                 <RepeatIcon fontSize="small" color="action" />
-              </IconButton>
-              <Typography variant="caption" color="text.secondary">0</Typography>
+                </IconButton>
+                <Typography variant="caption" color="text.secondary">0</Typography>
             </Stack>
 
             {/* いいね */}
             <Stack direction="row" spacing={0.5} alignItems="center">
-              <IconButton size="small" onClick={handleLike}>
+                <IconButton size="small" onClick={handleLike}>
                 <FavoriteBorderIcon
-                  fontSize="small"
-                  color={isLiked ? 'error' : 'action'}
+                    fontSize="small"
+                    color={isLiked ? 'error' : 'action'}
                 />
-              </IconButton>
-              <Typography variant="caption" color="text.secondary">{likeCount}</Typography>
+                </IconButton>
+                <Typography variant="caption" color="text.secondary">{likeCount}</Typography>
             </Stack>
-          </Stack>
-            {/* 分析アイコン */}
-          <Stack direction="row" spacing={0.5} alignItems="center">
-            <IconButton
+
+            {/* 分析 */}
+            <Stack direction="row" spacing={0.5} alignItems="center">
+                <IconButton
                 size="small"
                 onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/posts/${id}?analyze=true`);
+                    e.stopPropagation();
+                    navigate(`/posts/${id}?analyze=true`);
                 }}
-            >
+                >
                 <GavelIcon fontSize="small" color="action" />
-            </IconButton>
-          </Stack>
+                </IconButton>
+            </Stack>
+            </Stack>
         </Box>
       </CardContent>
     </Card>
