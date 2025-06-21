@@ -78,3 +78,28 @@ export async function fetchRepliesByPostId(postId: number) {
     throw err;
   }
 }
+
+// ✅ これがあるか確認
+export const fetchFactCheck = async (postId: number) => {
+  try {
+    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/posts/${postId}/factcheck`, {
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("❌ Fetch error:", res.status, text);
+      throw new Error("Failed to fetch factcheck");
+    }
+
+    const data = await res.json();
+    console.log("✅ Factcheck result:", data.factcheck);
+    return data.factcheck;
+
+  } catch (err) {
+    console.error("❌ Error during factcheck:", err);
+    return "ファクトチェックに失敗しました。";
+  }
+};
+
+
