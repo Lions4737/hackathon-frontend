@@ -3,10 +3,27 @@ import Stack from '@mui/material/Stack';
 import CustomDatePicker from './CustomDatePicker';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
-
 import Search from './Search';
 
-export default function Header() {
+type HeaderProps = {
+  searchTerm: string;
+  setSearchTerm: (v: string) => void;
+};
+
+export default function Header({ searchTerm, setSearchTerm }: HeaderProps) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'f') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <Stack
       direction="row"
@@ -22,7 +39,7 @@ export default function Header() {
     >
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
-        <Search />
+        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} inputRef={inputRef} />
         <ColorModeIconDropdown />
       </Stack>
     </Stack>

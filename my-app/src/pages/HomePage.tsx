@@ -1,4 +1,3 @@
-// pages/HomePage.tsx
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -28,23 +27,36 @@ type Post = {
   };
 };
 
-const data: StatCardProps[] = [ /* 略 */ ];
-
-const HomePage = () => {
+const HomePage = ({
+  searchTerm,
+  setSearchTerm,
+}: {
+  searchTerm: string;
+  setSearchTerm: (v: string) => void;
+}) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [likedPostIds, setLikedPostIds] = useState<number[]>([]);
 
   useEffect(() => {
     const loadAll = async () => {
       const [allPosts, myLikes] = await Promise.all([
-        fetchAllPosts(), // GET /api/posts
-        fetchMyLikes(),  // GET /api/my-likes
+        fetchAllPosts(),
+        fetchMyLikes(),
       ]);
       setPosts(allPosts);
       setLikedPostIds(myLikes);
+
+      // ✅ 投稿取得後に中身をログ
+      console.log("📦 All Posts:", allPosts);
+      console.log("💖 My Likes:", myLikes);
     };
     loadAll();
   }, []);
+
+  // ✅ 検索語が変わるたびにログ出力
+  React.useEffect(() => {
+    console.log("🔍 Current SearchTerm:", searchTerm);
+  }, [searchTerm]);
 
   const handleToggleLike = async (postId: number, isLiked: boolean) => {
     if (isLiked) {
@@ -66,16 +78,24 @@ const HomePage = () => {
     }
   };
 
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // ✅ フィルタ後の件数を表示
+  console.log("✅ Filtered Posts Count:", filteredPosts.length);
+
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       <Box sx={{ display: 'flex', gap: 4, mt: 4, justifyContent: 'center', pr: 1, height: '100vh', overflow: 'hidden'}}>
-        {/* 左カラム */}
         <Box sx={{ width: '65%', height: '100%', overflowY: 'auto' }}>
           <Typography component="h2" variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Tweet List
           </Typography>
           <Grid container spacing={0}>
-            {posts.map((post) => (
+            {filteredPosts.map((post) => (
               <Grid item xs={12} key={post.id} sx={{width: '100%'}}>
                 <TweetCard
                   id={post.id}
@@ -96,8 +116,6 @@ const HomePage = () => {
           <FloatingPostButton />
         </Box>
       </Box>
-
-      {/* 他の統計表示やグラフ等（省略可） */}
     </Box>
   );
 };

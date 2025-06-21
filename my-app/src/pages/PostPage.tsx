@@ -30,7 +30,13 @@ type Post = {
   };
 };
 
-const PostPage = () => {
+const PostPage = ({
+  searchTerm = '',
+  setSearchTerm = () => {},
+}: {
+  searchTerm?: string;
+  setSearchTerm?: (v: string) => void;
+}) => {
   const { postId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,7 +49,7 @@ const PostPage = () => {
   const [likedPostIds, setLikedPostIds] = useState<number[]>([]);
   const [openReplyModal, setOpenReplyModal] = useState(replyOpen);
   const [loading, setLoading] = useState(false);
-  const [factcheck, setFactcheck] = useState("");
+  const [factcheck, setFactcheck] = useState('');
 
   const load = useCallback(async () => {
     if (!postId) return;
@@ -104,6 +110,14 @@ const PostPage = () => {
 
   if (!post) return <div>Loading...</div>;
 
+  const filteredReplies = replies.filter((reply) => {
+    const lower = searchTerm?.toLowerCase() || '';
+    return (
+      reply.content?.toLowerCase().includes(lower) ||
+      reply.user?.username?.toLowerCase().includes(lower)
+    );
+  });
+
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       <Box
@@ -117,13 +131,11 @@ const PostPage = () => {
           overflow: 'hidden',
         }}
       >
-        {/* 左カラム */}
         <Box sx={{ width: '65%', height: '100%', overflowY: 'auto' }}>
           <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Tweet Detail
           </Typography>
 
-          {/* 親ツイート */}
           <Grid container spacing={2} sx={{ mb: 2 }}>
             <Grid item xs={12} key={post.id} sx={{ width: '100%' }}>
               <TweetCard
@@ -142,11 +154,10 @@ const PostPage = () => {
             </Grid>
           </Grid>
 
-          {/* リプライ一覧 */}
           <Box sx={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto' }}>
             <Grid container spacing={0} justifyContent="center">
-              {replies.map((reply) => (
-                <Grid item xs={12} key={reply.id} sx={{ width: '80%' }} > 
+              {filteredReplies.map((reply) => (
+                <Grid item xs={12} key={reply.id} sx={{ width: '80%' }}>
                   <TweetCard
                     id={reply.id}
                     userId={reply.user_id}
@@ -179,7 +190,6 @@ const PostPage = () => {
           />
         </Box>
 
-        {/* 右カラム */}
         <Box sx={{ width: '30%', height: '100%', overflowY: 'auto' }}>
           <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Related Info
