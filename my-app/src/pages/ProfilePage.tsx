@@ -1,4 +1,3 @@
-// pages/ProfilePage.tsx
 import * as React from 'react';
 import {
   Box,
@@ -10,11 +9,13 @@ import {
   Typography,
   Stack,
   Card as MuiCard,
+  Avatar,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../components/ui/AppTheme';
 import { useAuthContext } from '../components/auth/AuthContext';
 import { fetchUserProfile, updateUserProfile } from '../utils/api';
+import ProfileImageUploader from '../components/ui/ProfileImageUploader';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -33,12 +34,11 @@ const FullPageContainer = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(4),
   alignItems: 'center',
   justifyContent: 'center',
-  background: 'linear-gradient(to bottom right, #ffffff, #f0f2f5)', // 明るいグラデーション
+  background: 'linear-gradient(to bottom right, #ffffff, #f0f2f5)',
   ...theme.applyStyles('dark', {
-    background: 'linear-gradient(to bottom right, #1e1e1e, #2c2c2c)', // ダークテーマでも柔らかめ
+    background: 'linear-gradient(to bottom right, #1e1e1e, #2c2c2c)',
   }),
 }));
-
 
 type Profile = {
   username: string;
@@ -70,7 +70,7 @@ export default function ProfilePage() {
   const fetchAndSetProfile = async () => {
     const data = await fetchUserProfile();
     setProfile(data);
-    setDraft({ ...data, description: '' });
+    setDraft(data);
   };
 
   React.useEffect(() => {
@@ -172,7 +172,6 @@ export default function ProfilePage() {
         )}
       </Stack>
     </FormControl>
-    
   );
 
   return (
@@ -184,9 +183,45 @@ export default function ProfilePage() {
             Edit Profile
           </Typography>
 
+          {/* プロフィール画像 */}
+          <Stack spacing={2} alignItems="center">
+            <Avatar
+              src={draft.profile_image || '/default-avatar.png'}
+              sx={{ width: 80, height: 80 }}
+            />
+            {currentUser && (
+              <ProfileImageUploader
+                onUploadTempUrl={(url) => {
+                  setDraft((prev) => ({ ...prev, profile_image: url }));
+                  setEditMode((prev) => ({ ...prev, profile_image: true }));
+                }}
+              />
+            )}
+
+            {/* Save / Cancel for image */}
+            {editMode.profile_image && (
+              <Stack direction="row" spacing={1}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => handleCancelField('profile_image')}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={() => handleSaveField('profile_image')}
+                >
+                  Save
+                </Button>
+              </Stack>
+            )}
+          </Stack>
+
+          {/* 他のフィールド */}
           {renderField('Username', 'username')}
           {renderField('Description', 'description', true)}
-          {renderField('Profile Image URL', 'profile_image')}
         </Card>
       </FullPageContainer>
     </AppTheme>
