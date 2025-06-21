@@ -23,8 +23,13 @@ function formatTime(isoString: string): string {
   return formatDistanceToNow(new Date(isoString), { addSuffix: true });
 }
 
-export default function UserPostsPage() {
-  const { userId } = useParams(); // ← ここでURLからuserId取得
+type Props = {
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+};
+
+export default function UserPostsPage({ searchTerm }: Props) {
+  const { userId } = useParams();
   const [posts, setPosts] = useState<any[]>([]);
   const [likes, setLikes] = useState<number[]>([]);
   const [profile, setProfile] = useState<any>(null);
@@ -84,6 +89,15 @@ export default function UserPostsPage() {
     );
   }
 
+  const filteredPosts = posts.filter((post) => {
+    const content = post.content?.toLowerCase() || '';
+    const username = post.user?.username?.toLowerCase() || '';
+    return (
+      content.includes(searchTerm.toLowerCase()) ||
+      username.includes(searchTerm.toLowerCase())
+    );
+  });
+
   return (
     <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
       <Box sx={{ display: 'flex', gap: 4, mt: 4, justifyContent: 'center', pr: 1, height: '100vh', overflow: 'hidden' }}>
@@ -120,12 +134,12 @@ export default function UserPostsPage() {
                 mr: 2,
               }}
             >
-              投稿数: {posts.length} 件
+              投稿数: {filteredPosts.length} 件
             </Typography>
           </Box>
 
           <Grid container spacing={0}>
-            {posts
+            {filteredPosts
               .filter((post) => post.content?.trim())
               .map((post) => (
                 <Grid item xs={12} key={post.id} sx={{ width: '100%' }}>
