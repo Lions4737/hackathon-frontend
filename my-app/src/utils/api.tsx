@@ -9,7 +9,11 @@ export const fetchAllPosts = async () => {
     credentials: 'include',
   });
   if (!res.ok) throw new Error('投稿取得失敗');
-  return await res.json();
+
+  const allPosts = await res.json();
+
+  // ✅ リプライでない投稿だけを返す（IsReply === false）
+  return allPosts.filter((post: any) => post.is_reply === false);
 };
 
 export const fetchMyPosts = async () => {
