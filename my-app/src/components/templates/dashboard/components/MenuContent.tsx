@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'; // ✅ useLocation 追加
+import { useNavigate, useLocation } from 'react-router-dom';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -10,24 +10,28 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 
-const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon />, path: '/home' },
-  { text: 'Profile', icon: <PeopleRoundedIcon />, path: '/profile' },
-  { text: 'My Posts', icon: <AssignmentRoundedIcon />, path: '/my-posts' },
-];
+type Props = {
+  userId: number;
+};
 
-export default function MenuContent() {
+export default function MenuContent({ userId }: Props) {
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ 現在のURL取得
+  const location = useLocation();
+
+  const menuItems = [
+    { text: 'Home', icon: <HomeRoundedIcon />, path: '/home' },
+    { text: 'Profile', icon: <PeopleRoundedIcon />, path: '/profile' },
+    { text: 'My Posts', icon: <AssignmentRoundedIcon />, path: `/users/${userId}` },
+  ];
 
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
-        {mainListItems.map((item) => (
+        {menuItems.map((item) => (
           <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               onClick={() => navigate(item.path)}
-              selected={location.pathname === item.path} // ✅ パス一致で選択
+              selected={location.pathname === item.path}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />

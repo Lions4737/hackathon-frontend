@@ -12,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from 'react-router-dom'; // 追加
 
 const tweetSchema = z.object({
   content: z
@@ -36,6 +37,7 @@ const FloatingPostButton: React.FC<FloatingPostButtonProps> = ({
   onClose,
 }) => {
   const [dialogOpen, setDialogOpen] = React.useState(open);
+  const navigate = useNavigate(); 
 
   const {
     register,
@@ -75,6 +77,9 @@ const FloatingPostButton: React.FC<FloatingPostButtonProps> = ({
       const result = await res.json();
       console.log('投稿成功:', result);
       handleClose();
+      if (!parentPostId) {
+      navigate(`/my-posts`);
+      }
       onPostSuccess?.();
     } catch (err) {
       console.error('投稿エラー:', err);
