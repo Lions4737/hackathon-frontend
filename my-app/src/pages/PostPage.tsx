@@ -9,6 +9,7 @@ import {
   likePost,
   unlikePost,
   fetchMyLikes,
+  fetchFactCheck,
 } from '../utils/api';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -34,13 +35,15 @@ const PostPage = () => {
   const navigate = useNavigate();
   const query = new URLSearchParams(location.search);
   const replyOpen = query.get('replyOpen') === 'true';
+  const analyze = query.get('analyze') === 'true';
 
   const [post, setPost] = useState<Post | null>(null);
   const [replies, setReplies] = useState<Post[]>([]);
   const [likedPostIds, setLikedPostIds] = useState<number[]>([]);
   const [openReplyModal, setOpenReplyModal] = useState(replyOpen);
+  const [loading, setLoading] = useState(false);
+  const [factcheck, setFactcheck] = useState("");
 
-  // ✅ 再取得関数を useCallback で定義
   const load = useCallback(async () => {
     if (!postId) return;
     const [parent, replyList, myLikes] = await Promise.all([
@@ -51,17 +54,23 @@ const PostPage = () => {
     setPost(parent);
     setReplies(replyList);
     setLikedPostIds(myLikes);
-  }, [postId]);
+
+    if (analyze) {
+      setLoading(true);
+      const result = await fetchFactCheck(Number(postId));
+      setFactcheck(result);
+      setLoading(false);
+    }
+  }, [postId, analyze]);
 
   useEffect(() => {
     load();
   }, [load]);
 
   useEffect(() => {
-  const query = new URLSearchParams(location.search);
-  const replyOpen = query.get('replyOpen') === 'true';
-  setOpenReplyModal(replyOpen);
-}, [location.search]);
+    const query = new URLSearchParams(location.search);
+    setOpenReplyModal(query.get('replyOpen') === 'true');
+  }, [location.search]);
 
   const handleToggleLike = async (tweetId: number, isLiked: boolean) => {
     if (isLiked) {
@@ -157,13 +166,12 @@ const PostPage = () => {
             parentPostId={Number(postId)}
             open={openReplyModal}
             onPostSuccess={() => {
-              handleCloseReplyModal(); // モーダルを閉じる
-              load();                  // 状態を再取得する（リロード相当）
+              handleCloseReplyModal();
+              load();
             }}
             onClose={() => {
-                // 🔥 キャンセル時にもURLの `replyOpen` を削除
-                setOpenReplyModal(false);
-                navigate(`/posts/${postId}`, { replace: true });
+              setOpenReplyModal(false);
+              navigate(`/posts/${postId}`, { replace: true });
             }}
           />
         </Box>
@@ -173,6 +181,21 @@ const PostPage = () => {
           <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Related Info
           </Typography>
+
+          {analyze && post && (
+            <Box sx={{ p: 2 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                🧐 Geminiによるファクトチェック
+              </Typography>
+              {loading ? (
+                <Typography variant="body2" color="text.secondary">
+                  分析中...
+                </Typography>
+              ) : (
+                <Typography variant="body2">{factcheck}</Typography>
+              )}
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

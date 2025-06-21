@@ -14,6 +14,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { useNavigate } from 'react-router-dom'; // ✅ 追加
+import GavelIcon from '@mui/icons-material/Gavel'; // ← 分析アイコン
 
 export type TweetCardProps = {
   id: number;
@@ -108,6 +109,18 @@ const TweetCard: React.FC<TweetCardProps> = ({
               </IconButton>
               <Typography variant="caption" color="text.secondary">{likeCount}</Typography>
             </Stack>
+          </Stack>
+            {/* 分析アイコン */}
+          <Stack direction="row" spacing={0.5} alignItems="center">
+            <IconButton
+                size="small"
+                onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/posts/${id}?analyze=true`);
+                }}
+            >
+                <GavelIcon fontSize="small" color="action" />
+            </IconButton>
           </Stack>
         </Box>
       </CardContent>
