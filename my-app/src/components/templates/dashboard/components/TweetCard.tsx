@@ -46,6 +46,11 @@ const TweetCard: React.FC<TweetCardProps> = ({
     navigate(`/posts/${id}`);
   };
 
+  const handleReplyClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // カードクリックとの競合防止
+    navigate(`/posts/${id}?replyOpen=true`);
+  };
+
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation(); // ✅ カードクリックと分離
     onToggleLike(id, isLiked);
@@ -79,7 +84,7 @@ const TweetCard: React.FC<TweetCardProps> = ({
           <Stack direction="row" spacing={3} sx={{ mt: 1 }}>
             {/* リプライ */}
             <Stack direction="row" spacing={0.5} alignItems="center">
-              <IconButton size="small" onClick={(e) => e.stopPropagation()}>
+              <IconButton size="small" onClick={handleReplyClick}>
                 <ChatBubbleOutlineIcon fontSize="small" color="action" />
               </IconButton>
               <Typography variant="caption" color="text.secondary">{replyCount}</Typography>

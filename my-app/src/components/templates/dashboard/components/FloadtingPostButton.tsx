@@ -13,7 +13,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-// バリデーションスキーマ：140文字以内
 const tweetSchema = z.object({
   content: z
     .string()
@@ -23,8 +22,20 @@ const tweetSchema = z.object({
 
 type TweetFormData = z.infer<typeof tweetSchema>;
 
-const FloatingPostButton: React.FC = () => {
-  const [open, setOpen] = React.useState(false);
+type FloatingPostButtonProps = {
+  parentPostId?: number;
+  open?: boolean;
+  onPostSuccess?: () => void;
+  onClose?: () => void;
+};
+
+const FloatingPostButton: React.FC<FloatingPostButtonProps> = ({
+  parentPostId,
+  open = false,
+  onPostSuccess,
+  onClose,
+}) => {
+  const [dialogOpen, setDialogOpen] = React.useState(open);
 
   const {
     register,
@@ -35,44 +46,53 @@ const FloatingPostButton: React.FC = () => {
     resolver: zodResolver(tweetSchema),
   });
 
-  const handleOpen = () => setOpen(true);
+  const handleFabClick = () => {
+    setDialogOpen(true);
+  };
+
   const handleClose = () => {
     reset();
-    setOpen(false);
+    setDialogOpen(false);
+    onClose?.();
   };
 
   const onSubmit = async (data: TweetFormData) => {
-    console.log("onSubmit 発火", data);
-  try {
-    const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/posts`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ content: data.content }),
-    });
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/posts`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: data.content,
+          parent_post_id: parentPostId ?? null,
+        }),
+      });
 
-    if (!res.ok) {
-      throw new Error('投稿に失敗しました');
+      if (!res.ok) throw new Error('投稿に失敗しました');
+
+      const result = await res.json();
+      console.log('投稿成功:', result);
+      handleClose();
+      onPostSuccess?.();
+    } catch (err) {
+      console.error('投稿エラー:', err);
+      alert('投稿に失敗しました');
     }
+  };
 
-    const result = await res.json();
-    console.log('投稿成功:', result);
-    handleClose();
-  } catch (err) {
-    console.error('投稿エラー:', err);
-    alert('投稿に失敗しました');
-  }
-};
-
+  // 🔁 open prop の変化に応じてダイアログ状態を更新
+  React.useEffect(() => {
+    setDialogOpen(open);
+  }, [open]);
 
   return (
     <>
       <Fab
         color="primary"
         aria-label="add"
-        onClick={handleOpen}
+        onClick={handleFabClick}
         sx={{
           position: 'fixed',
           bottom: 32,
@@ -83,32 +103,32 @@ const FloatingPostButton: React.FC = () => {
         <AddIcon />
       </Fab>
 
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogTitle>新しいツイートを投稿</DialogTitle>
+      <Dialog open={dialogOpen} onClose={handleClose} fullWidth maxWidth="sm">
+        <DialogTitle>{parentPostId ? '返信を投稿' : '新しいツイートを投稿'}</DialogTitle>
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
             <TextField
-                placeholder="ツイート内容"
-                multiline
-                fullWidth
-                {...register('content')}
-                error={!!errors.content}
-                helperText={errors.content?.message}
-                variant="outlined"
-                sx={{
-                    height: 120,
-                    '& .MuiInputBase-root': {
-                    height: '100%',
-                    alignItems: 'start',
-                    padding: 1,
-                    },
-                    '& textarea': {
-                    height: '100% !important',
-                    overflow: 'hidden',
-                    resize: 'none',
-                    lineHeight: 1.5,
-                    },
-                }}
+              placeholder="ツイート内容"
+              multiline
+              fullWidth
+              {...register('content')}
+              error={!!errors.content}
+              helperText={errors.content?.message}
+              variant="outlined"
+              sx={{
+                height: 120,
+                '& .MuiInputBase-root': {
+                  height: '100%',
+                  alignItems: 'start',
+                  padding: 1,
+                },
+                '& textarea': {
+                  height: '100% !important',
+                  overflow: 'hidden',
+                  resize: 'none',
+                  lineHeight: 1.5,
+                },
+              }}
             />
           </DialogContent>
           <DialogActions>
