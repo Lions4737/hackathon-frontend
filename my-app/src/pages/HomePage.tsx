@@ -93,18 +93,6 @@ const HomePage = () => {
           </Grid>
           <FloatingPostButton />
         </Box>
-
-        {/* 右カラム */}
-        <Box sx={{ width: '30%', height: '100%', overflowY: 'auto' }}>
-          <Typography component="h2" variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
-            Tweet Detail
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <CustomizedDataGrid />
-            </Grid>
-          </Grid>
-        </Box>
       </Box>
 
       {/* 他の統計表示やグラフ等（省略可） */}
