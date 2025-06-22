@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import CustomDatePicker from './CustomDatePicker';
+import IconButton from '@mui/material/IconButton';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
 import Search from './Search';
@@ -39,6 +40,15 @@ export default function Header({ searchTerm, setSearchTerm }: HeaderProps) {
     >
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
+        {/* 🔄 ページリロードボタン */}
+        <IconButton
+          aria-label="Reload page"
+          onClick={() => window.location.reload()}
+          size="large"
+        >
+          <RefreshIcon />
+        </IconButton>
+
         <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} inputRef={inputRef} />
         <ColorModeIconDropdown />
       </Stack>
