@@ -9,6 +9,7 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuButton from './MenuButton';
 import MenuContent from './MenuContent';
+import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
 import CardAlert from './CardAlert';
 
 import { useAuthContext } from '../../../auth/AuthContext'; // ✅ 追加
@@ -47,19 +48,13 @@ export default function SideMenuMobile({ open, toggleDrawer }: SideMenuMobilePro
       <Stack sx={{ maxWidth: '70dvw', height: '100%' }}>
         <Stack direction="row" sx={{ p: 2, pb: 0, gap: 1 }}>
           <Stack direction="row" sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}>
-            <Avatar
-              sizes="small"
-              alt="Riley Carter"
-              src="/static/images/avatar/7.jpg"
-              sx={{ width: 24, height: 24 }}
-            />
+            <Avatar alt="Sitemark web">
+            <DevicesRoundedIcon sx={{ fontSize: '1rem' }} />
+            </Avatar>
             <Typography component="p" variant="h6">
-              Riley Carter
+              UTTter
             </Typography>
           </Stack>
-          <MenuButton showBadge>
-            <NotificationsRoundedIcon />
-          </MenuButton>
         </Stack>
         <Divider />
         <Stack sx={{ flexGrow: 1 }}>

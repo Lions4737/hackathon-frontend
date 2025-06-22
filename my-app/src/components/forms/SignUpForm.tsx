@@ -106,7 +106,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       <SignUpContainer direction="column" justifyContent="center">
         <Card variant="outlined">
           <Typography component="h1" variant="h4">
-            Sign up
+            新規登録
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <FormControl>
@@ -133,7 +133,7 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
                 helperText={passwordErrorMessage}
               />
             </FormControl>
-            <Button type="submit" fullWidth variant="contained">Create Account</Button>
+            <Button type="submit" fullWidth variant="contained">新規登録</Button>
           </Box>
           {successMessage && (
             <Typography color="success.main" sx={{ mt: 1, textAlign: 'center' }}>
@@ -141,12 +141,9 @@ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
             </Typography>
             )}
           <Divider>or</Divider>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button fullWidth variant="outlined" startIcon={<GoogleIcon />}>Sign up with Google</Button>
-          </Box>
           <Typography sx={{ textAlign: 'center', mt: 2 }}>
-            Already have an account?{' '}
-            <Link href="/" variant="body2">Sign in</Link>
+            既にアカウントをお持ちですか？{' '}
+            <Link href="/" variant="body2">ログイン</Link>
           </Typography>
         </Card>
       </SignUpContainer>

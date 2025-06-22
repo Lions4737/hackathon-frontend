@@ -11,6 +11,8 @@ import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import SideMenuMobile from './SideMenuMobile';
 import MenuButton from './MenuButton';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
+import Avatar from '@mui/material/Avatar';
+import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
@@ -63,9 +65,11 @@ export default function AppNavbar() {
             spacing={1}
             sx={{ justifyContent: 'center', mr: 'auto' }}
           >
-            <CustomIcon />
+            <Avatar alt="Sitemark web">
+            <DevicesRoundedIcon sx={{ fontSize: '1rem' }} />
+          </Avatar>
             <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-              Dashboard
+              UTTter
             </Typography>
           </Stack>
           <ColorModeIconDropdown />
