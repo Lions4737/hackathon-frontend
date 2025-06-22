@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, useTheme, useMediaQuery } from '@mui/material';
 import TweetCard from '../components/templates/dashboard/components/TweetCard';
 import FloatingPostButton from '../components/templates/dashboard/components/FloadtingPostButton';
 import {
@@ -43,6 +43,9 @@ const PostPage = ({
   const query = new URLSearchParams(location.search);
   const replyOpen = query.get('replyOpen') === 'true';
   const analyze = query.get('analyze') === 'true';
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [post, setPost] = useState<Post | null>(null);
   const [replies, setReplies] = useState<Post[]>([]);
@@ -123,15 +126,23 @@ const PostPage = ({
       <Box
         sx={{
           display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
           gap: 4,
           mt: 4,
           justifyContent: 'center',
           pr: 1,
-          height: '100vh',
+          height: isMobile ? 'auto' : '100vh',
           overflow: 'hidden',
         }}
       >
-        <Box sx={{ width: '65%', height: '100%', overflowY: 'auto' }}>
+        {/* メインカラム */}
+        <Box
+          sx={{
+            width: isMobile ? '100%' : '65%',
+            height: '100%',
+            overflowY: 'auto',
+          }}
+        >
           <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Tweet Detail
           </Typography>
@@ -154,10 +165,10 @@ const PostPage = ({
             </Grid>
           </Grid>
 
-          <Box sx={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto' }}>
+          <Box sx={{ maxHeight: isMobile ? 'none' : 'calc(100vh - 280px)', overflowY: 'auto' }}>
             <Grid container spacing={0} justifyContent="center">
               {filteredReplies.map((reply) => (
-                <Grid item xs={12} key={reply.id} sx={{ width: '80%' }}>
+                <Grid item xs={12} key={reply.id} sx={{ width: isMobile ? '100%' : '80%' }}>
                   <TweetCard
                     id={reply.id}
                     userId={reply.user_id}
@@ -190,7 +201,15 @@ const PostPage = ({
           />
         </Box>
 
-        <Box sx={{ width: '30%', height: '100%', overflowY: 'auto' }}>
+        {/* サイドカラム */}
+        <Box
+          sx={{
+            width: isMobile ? '100%' : '30%',
+            height: isMobile ? 'auto' : '100%',
+            overflowY: 'auto',
+            mt: isMobile ? 4 : 0,
+          }}
+        >
           <Typography variant="h6" sx={{ mb: 2, textAlign: 'center' }}>
             Related Info
           </Typography>

@@ -155,7 +155,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            Sign in
+            ログイン
           </Typography>
           <Box
             component="form"
@@ -202,10 +202,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <ForgotPassword open={open} handleClose={handleClose} />
             <Button
               type="submit"
@@ -213,44 +209,19 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="contained"
               onClick={validateInputs}
             >
-              Sign in
+              ログイン
             </Button>
-            <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: 'center' }}
-            >
-              Forgot your password?
-            </Link>
           </Box>
           <Divider>or</Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign in with Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign in with Facebook')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign in with Facebook
-            </Button>
             <Typography sx={{ textAlign: 'center' }}>
-              Don&apos;t have an account?{' '}
+              アカウントを持っていませんか？{' '}
               <Link
                 href="/signup"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >
-                Sign up
+                新規作成
               </Link>
             </Typography>
           </Box>
