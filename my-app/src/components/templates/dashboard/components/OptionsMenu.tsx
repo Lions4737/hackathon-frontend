@@ -37,6 +37,11 @@ export default function OptionsMenu() {
     navigate('/');  // ✅ ホームへリダイレクト
   };
 
+  const handleGoSettings = () => {
+  handleClose();
+  navigate('/settings');
+};
+
   return (
     <React.Fragment>
       <MenuButton
@@ -66,8 +71,7 @@ export default function OptionsMenu() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Add another account</MenuItem>
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
+        <MenuItem onClick={handleGoSettings}>Settings</MenuItem>
         <Divider />
         <MenuItem
           onClick={handleLogout} // ✅ logoutに変更

@@ -4,6 +4,7 @@ import HomePage from "../../pages/HomePage";
 import PostPage from "../../pages/PostPage";
 import ProfilePage from "../../pages/ProfilePage";
 import UserPostsPage from "../../pages/UserPostsPage";
+import SettingsPage from "../../pages/SettingPage";
 import { useState } from "react";
 
 const DashboardRouter = () => {
@@ -32,6 +33,7 @@ const DashboardRouter = () => {
           }
         />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </DashboardLayout>
   );
