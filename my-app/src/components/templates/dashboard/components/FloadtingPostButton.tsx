@@ -12,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom'; // 追加
+import { useNavigate } from 'react-router-dom';
 
 const tweetSchema = z.object({
   content: z
@@ -30,6 +30,14 @@ type FloatingPostButtonProps = {
   onClose?: () => void;
 };
 
+type DBUser = {
+  id: number;
+  firebase_uid: string;
+  username: string;
+  description?: string;
+  profile_image?: string;
+};
+
 const FloatingPostButton: React.FC<FloatingPostButtonProps> = ({
   parentPostId,
   open = false,
@@ -37,7 +45,8 @@ const FloatingPostButton: React.FC<FloatingPostButtonProps> = ({
   onClose,
 }) => {
   const [dialogOpen, setDialogOpen] = React.useState(open);
-  const navigate = useNavigate(); 
+  const [userId, setUserId] = React.useState<number | null>(null); // 👈 自分のuserId
+  const navigate = useNavigate();
 
   const {
     register,
@@ -47,6 +56,23 @@ const FloatingPostButton: React.FC<FloatingPostButtonProps> = ({
   } = useForm<TweetFormData>({
     resolver: zodResolver(tweetSchema),
   });
+
+  // 👇 ログインユーザーのIDを取得
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/me`, {
+          credentials: 'include',
+        });
+        if (!res.ok) throw new Error('ユーザー情報の取得に失敗しました');
+        const data: DBUser = await res.json();
+        setUserId(data.id);
+      } catch (err) {
+        console.error('❌ ユーザー情報取得エラー:', err);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleFabClick = () => {
     setDialogOpen(true);
@@ -77,9 +103,12 @@ const FloatingPostButton: React.FC<FloatingPostButtonProps> = ({
       const result = await res.json();
       console.log('投稿成功:', result);
       handleClose();
-      if (!parentPostId) {
-      navigate(`/my-posts`);
+
+      // ✅ 親ツイートでなければ /users/{自分のid} に遷移
+      if (!parentPostId && userId !== null) {
+        navigate(`/users/${userId}`);
       }
+
       onPostSuccess?.();
     } catch (err) {
       console.error('投稿エラー:', err);
@@ -87,7 +116,6 @@ const FloatingPostButton: React.FC<FloatingPostButtonProps> = ({
     }
   };
 
-  // 🔁 open prop の変化に応じてダイアログ状態を更新
   React.useEffect(() => {
     setDialogOpen(open);
   }, [open]);
